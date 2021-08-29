@@ -1,124 +1,112 @@
 package com.epam.test.automation.java.practice9;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
 public class Matrix {
 
-    /**
-     * Implement a constructor that creates an empty matrix with a given number of rows
-     * columns (all values in matrix equal 0.0)
-     *
-     * @param row    number of rows
-     * @param column number of columns
-     * @return Returns a new instance of the matrix with the specified parameters
-     */
+    public static final String NULL_MATRIX = "Matrix is null";
+    public static final String INCOMP_MATRIX_SIZE = "Incompatible matrix sizes";
+    private final double[][] actualmatrix;
+    private final int rowcount;
+    private final int columncount;
+
     public Matrix(int row, int column) {
-        //TODO: Delete line below and write your own solution;
-        throw new UnsupportedOperationException();
+        this.rowcount = row;
+        this.columncount = column;
+        checkRowAndColumn(rowcount, columncount);
+        this.actualmatrix = new double[rowcount][columncount];
+        for (double[] doubles : actualmatrix) {
+            Arrays.fill(doubles, 0);
+        }
     }
 
-    /**
-     * Implement a constructor that creating of matrix based on existing two-dimensional array.
-     *
-     * @param twoDimensionalArray existing two-dimensional array
-     * @return Returns a new instance of the matrix based on existing two-dimensional array
-     * @throws MatrixException if the incoming array with zero number of rows returns the message "Array passed with zero number of rows",
-     *                         if the incoming array with zero number of columns returns the message "Array passed with zero number of columns"
-     */
     public Matrix(double[][] twoDimensionalArray) throws MatrixException {
-        //TODO: Delete line below and write your own solution;
-        throw new UnsupportedOperationException();
+        checkDoubleMatrix(twoDimensionalArray);
+        this.actualmatrix = twoDimensionalArray;
+        rowcount = actualmatrix.length;
+        columncount = actualmatrix[0].length;
     }
 
-    /**
-     * @return Returns the number of rows in a matrix
-     */
     public final int rows() {
-        //TODO: Delete line below and write your own solution;
-        throw new UnsupportedOperationException();
+        return rowcount;
     }
 
-    /**
-     * @return Returns the number of columns in a matrix
-     */
     public final int columns() {
-        //TODO: Delete line below and write your own solution;
-        throw new UnsupportedOperationException();
+        return columncount;
     }
 
-    /**
-     * Receiving of standard two-dimensional array out of matrix.
-     *
-     * @return Standard two-dimensional array
-     */
     public double[][] twoDimensionalArrayOutOfMatrix() {
-        //TODO: Delete line below and write your own solution;
-        throw new UnsupportedOperationException();
+        return actualmatrix;
     }
 
-    /**
-     * Reading of elements via predetermined correct index
-     *
-     * @param row    number of rows
-     * @param column number of columns
-     * @return Returns the value of a matrix element <code>[row,column]</code>
-     * @throws MatrixException if index incorrect, returns message "Incompatible matrix sizes"
-     */
     public double getValue(int row, int column) throws MatrixException {
-        //TODO: Delete line below and write your own solution;
-        throw new UnsupportedOperationException();
+        checkCorrectIndex(row, column, actualmatrix);
+        return actualmatrix[row][column];
     }
 
-    /**
-     * Recording value <code>newValue</code> of elements via predetermined correct index <code>[row,column]</code>     *
-     *
-     * @param row      number of rows
-     * @param column   number of columns
-     * @param newValue new value of a matrix element
-     * @throws MatrixException if index incorrect, returns message "Incompatible matrix sizes"
-     */
     public void setValue(int row, int column, double newValue) throws MatrixException {
-        //TODO: Delete line below and write your own solution;
-        throw new UnsupportedOperationException();
+        checkCorrectIndex(row, column, actualmatrix);
+        actualmatrix[row][column] = newValue;
     }
 
-    /**
-     * Method of matrix's addition  <code>matrix</code>.
-     * Result in the original matrix
-     *
-     * @param matrix matrix corresponding to the second term
-     * @return Returns a new resulting matrix
-     * @throws MatrixException if incompatible matrix sizes, returns message "Incompatible matrix sizes"
-     */
     public Matrix addition(Matrix matrix) throws MatrixException {
-        //TODO: Delete line below and write your own solution;
-        throw new UnsupportedOperationException();
+        checkTwoMatrix(matrix, rows(), columns());
+        Matrix summatrix = new Matrix(rows(), columns());
+        for (int i = 0; i < rows(); i++) {
+            for (int j = 0; j < columns(); j++) {
+                summatrix.setValue(i, j, actualmatrix[i][j] + matrix.getValue(i, j));
+            }
+        }
+        return summatrix;
     }
 
-    /**
-     * Method of matrix's deduction <code>matrix</code> from original.
-     * Result in the original matrix
-     *
-     * @param matrix matrix corresponding to the subtracted
-     * @return Returns a new resulting matrix
-     * @throws MatrixException if incompatible matrix sizes, returns message "Incompatible matrix sizes"
-     */
     public Matrix subtraction(final Matrix matrix) throws MatrixException {
-        //TODO: Delete line below and write your own solution;
-        throw new UnsupportedOperationException();
+        checkTwoMatrix(matrix, rows(), columns());
+        Matrix submatrix = new Matrix(rows(), columns());
+        for (int i = 0; i < rows(); i++) {
+            for (int j = 0; j < columns(); j++) {
+                submatrix.setValue(i, j, actualmatrix[i][j] - matrix.getValue(i, j));
+            }
+        }
+        return submatrix;
     }
 
-    /**
-     * Method of matrix's multiplication <code>matrix</code>
-     * Result in the original matrix
-     *
-     * @param matrix matrix corresponding to the second factor
-     * @return Returns a new resulting matrix
-     * @throws MatrixException if incompatible matrix sizes, returns message "Incompatible matrix sizes"
-     */
     public Matrix multiplication(final Matrix matrix) throws MatrixException {
-        //TODO: Delete line below and write your own solution;
-        throw new UnsupportedOperationException();
+        if (columns() != matrix.rows()) {
+            throw new MatrixException(INCOMP_MATRIX_SIZE);
+        }
+        var multimatrix = new Matrix(rows(), matrix.columns());
+        for (int i = 0; i < rows(); i++) {
+            for (int u = 0; u < matrix.columns(); u++) {
+                for (int j = 0; j < columns(); j++) {
+                    multimatrix.setValue(i, u, multimatrix.getValue(i, u) + actualmatrix[i][j] * matrix.getValue(j, u));
+                }
+            }
+        }
+        return multimatrix;
+    }
+
+
+
+    public static void checkRowAndColumn(int rowcount, int columncount) {
+        if (rowcount < 1 || columncount <1 ) throw new UnsupportedOperationException("The number of rows or columns is less than 1");
+    }
+
+    public static void checkDoubleMatrix(double[][] twoDimensionalArray) throws MatrixException {
+        if (twoDimensionalArray == null) throw new UnsupportedOperationException(NULL_MATRIX);
+        if (twoDimensionalArray.length == 0) throw new MatrixException("Array passed with zero number of rows");
+        if (twoDimensionalArray[0] == null) throw new UnsupportedOperationException(NULL_MATRIX);
+        if (twoDimensionalArray[0].length == 0) throw new MatrixException("Array passed with zero number of columns");
+    }
+
+    public static void checkTwoMatrix(Matrix matrix, int rowcount, int columncount) throws MatrixException {
+        if (matrix.rows() != rowcount || matrix.columns() != columncount) throw new MatrixException(INCOMP_MATRIX_SIZE);
+    }
+
+    public static void checkCorrectIndex(int row, int column, double[][] actualmatrix) throws MatrixException {
+        if (row >= actualmatrix.length || column >= actualmatrix[0].length || row < 0 || column < 0)
+            throw new MatrixException(INCOMP_MATRIX_SIZE);
     }
 
     @Override
@@ -142,3 +130,4 @@ public class Matrix {
         return builder.toString();
     }
 }
+
