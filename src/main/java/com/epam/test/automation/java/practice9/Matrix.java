@@ -87,10 +87,9 @@ public class Matrix {
         return multimatrix;
     }
 
-
-
     public static void checkRowAndColumn(int rowcount, int columncount) {
-        if (rowcount < 1 || columncount <1 ) throw new UnsupportedOperationException("The number of rows or columns is less than 1");
+        if (rowcount < 1 || columncount < 1)
+            throw new UnsupportedOperationException("The number of rows or columns is less than 1");
     }
 
     public static void checkDoubleMatrix(double[][] twoDimensionalArray) throws MatrixException {
