@@ -1,6 +1,7 @@
 package com.epam.test.automation.java.practice9;
 
-import org.junit.Test;
+
+import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertThrows;
 
